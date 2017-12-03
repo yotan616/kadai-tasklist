@@ -11,6 +11,24 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'TasksController@index');
+
+Route::resource('tasks', 'TasksController');
+
+// CRUD ( resource の省略前 ↑上記の一文で省略できる部分)
+// Route::post('tasks', 'TasksController@store')->name('tasks.store');
+// Route::put('tasks/{id}', 'TasksController@update')->name('tasks.update');
+// Route::delete('tasks/{id}', 'TasksController@destroy')->name('tasks.destroy');
+
+// index: showの補助ページ
+// Route::get('tasks', 'TasksController@index')->name('tasks.index');
+
+// create: 新規作成用のフォームページ
+// Route::get('tasks/create', 'TasksController@create')->name('tasks.create');
+
+// show: 個別の内容詳細ページ
+// Route::get('tasks/{id}', 'TasksController@show')->name('tasks.show');
+
+// edit: 更新用のフォームページ
+// Route::get('tasks/{id}/edit', 'TasksController@edit')->name('tasks.edit');
+
