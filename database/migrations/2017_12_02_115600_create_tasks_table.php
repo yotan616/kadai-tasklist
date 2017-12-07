@@ -12,6 +12,7 @@ class CreateTasksTable extends Migration
      */
     public function up()
     {
+        // ここは tasks テーブルを作る　
         Schema::create('tasks', function (Blueprint $table) {
             $table->increments('id');
             $table->string('content');    // content カラム追加
@@ -26,6 +27,7 @@ class CreateTasksTable extends Migration
      */
     public function down()
     {
+        // ここは tasks テーブルを消す
         Schema::drop('tasks');
     }
 }
