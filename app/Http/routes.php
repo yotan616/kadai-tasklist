@@ -32,3 +32,6 @@ Route::resource('tasks', 'TasksController');
 // edit: 更新用のフォームページ
 // Route::get('tasks/{id}/edit', 'TasksController@edit')->name('tasks.edit');
 
+// ユーザ登録
+Route::get('signup', 'Auth\AuthController@getRegister')->name('signup.get');
+Route::post('signup', 'Auth\AuthController@postRegister')->name('signup.post');
