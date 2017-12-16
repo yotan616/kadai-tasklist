@@ -52,8 +52,9 @@ class TasksController extends Controller
         ]);
 
         $task = new Task;
-        $task->status = $request->status;
-        $task->content = $request->content;
+        $task->user_id = \Auth::user()->id;  // \Auth::user()->id  これで今ログインしてるユーザIDがとれる
+        $task->status = $request->status;    // view のフォームで送信されたデータを受け取ってる
+        $task->content = $request->content;  // view のフォームで送信されたデータを受け取ってる
         $task->save();
 
         return redirect('/');
@@ -65,13 +66,25 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id)  // $id には何が入る？   http://hogehoge.com/tasks/13
     {
-         $task = Task::find($id);
-
-        return view('tasks.show', [
-            'task' => $task,
-        ]);
+        $user = \Auth::user();  // 今ログインしてるユーザ
+        $task = Task::find($id);  // 13番目のタスクを取ってくる
+        
+        // 自分のタスク？　○なら表示　×ならトップページへ
+        // １、タスクの持ち主のID ー＞ $task->user_id
+        // ２、ログインしているユーザID ー＞ \Auth::user()->id
+        
+        if ($task->user_id == \Auth::user()->id) {  // ログインしているユーザのタスク？
+            // ログインしている人が自分のタスクを見ようとしている
+            return view('tasks.show',[ 'task' => $task, ]);
+        } else {
+            // elseの中にくる人は
+            // ログインしている人で自分以外のタスクを見ようとしている
+            //  -> URLが / に飛ぶ
+            
+            return redirect('/');    
+        }
     }
 
     /**
@@ -102,13 +115,18 @@ class TasksController extends Controller
             'status' => 'required|max:10',   // 追加
             'content' => 'required|max:255',
         ]);
-
         $task = Task::find($id);
-        $task->status = $request->status;
-        $task->content = $request->content;
-        $task->save();
-
-        return redirect('/');
+        if ($task->user_id == \Auth::user()->id) { 
+            // ログインしているユーザが自分のタスクを操作する
+            // 指定したタスクの更新をする
+            $task->status = $request->status;
+            $task->content = $request->content;
+            $task->save();
+            return redirect('/');
+            
+        } else {
+            return redirect('/');    
+        }
     }
 
     /**
@@ -117,11 +135,18 @@ class TasksController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id)  // $id にタスク番号が入ってくる
     {
         $task = Task::find($id);
-        $task->delete();
-
-        return redirect('/');
+        if ($task->user_id == \Auth::user()->id) { 
+            // ログインしているユーザが自分のタスクを操作する
+            // 指定したタスクの削除をする
+            $task->delete();
+            return redirect('/');
+            
+        } else {
+            return redirect('/');    
+        }
+       
     }
 }

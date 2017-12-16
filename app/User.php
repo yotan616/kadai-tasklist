@@ -15,6 +15,18 @@ class User extends Model implements AuthenticatableContract,
                                     CanResetPasswordContract
 {
     use Authenticatable, Authorizable, CanResetPassword;
+    
+     public function tasks()
+    {
+        // $this は自分自身（Userクラス）
+        // hasMany() は Laravel の呪文、仕様
+        // hasMany(どのテーブルを使うか？, そのテーブルないでどのIDをとるか)
+        //         ------Task-----------,  --------> $thisのid がデフォルト値
+        //                                 -----------> user の id を使う　＝＞　じゃぁカラム名は user_id だね？
+        // SQLで書くと： select * from tasks where user_id = ??????;
+        return $this->hasMany(Task::class);
+    }
+
 
     /**
      * The database table used by the model.

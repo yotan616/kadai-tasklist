@@ -11,9 +11,8 @@
 |
 */
 
-Route::get('/', 'TasksController@index');
+Route::get('/', 'WelcomeController@index');
 
-Route::resource('tasks', 'TasksController');
 
 // CRUD ( resource の省略前 ↑上記の一文で省略できる部分)
 // Route::post('tasks', 'TasksController@store')->name('tasks.store');
@@ -44,4 +43,5 @@ Route::get('logout', 'Auth\AuthController@getLogout')->name('logout.get');
 // ログイン認証の確認
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
+    Route::resource('tasks', 'TasksController');
 });
